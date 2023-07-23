@@ -64,19 +64,21 @@ public class ItemController {
     }
 
     @PostMapping("items/{itemId}/edit")
-    public String updateItem(@PathVariable String itemId,
+    public String updateItem(@PathVariable Long itemId,
                              @ModelAttribute("form") BookForm form) {
 
         // 준영속 엔티티 (준영속 상태의 객체, jpa 가 관리하지 않음)
-        Book book = new Book();
-        book.setId(form.getId());
-        book.setName(form.getName());
-        book.setPrice(form.getPrice());
-        book.setStockQuantity(form.getStockQuantity());
-        book.setAuthor(form.getAuthor());
-        book.setIsbn(form.getIsbn());
-
-        itemService.saveItem(book);
+//        Book book = new Book();
+//        book.setId(form.getId());
+//        book.setName(form.getName());
+//        book.setPrice(form.getPrice());
+//        book.setStockQuantity(form.getStockQuantity());
+//        book.setAuthor(form.getAuthor());
+//        book.setIsbn(form.getIsbn());
+//
+//        itemService.saveItem(book);
+        // 컨트롤러에서 어설프게 엔티티를 생성하지 않는게 좋다.
+        itemService.updateItem(itemId, form.getName(), form.getPrice(), form.getStockQuantity());
 
         return "redirect:/items";
     }

@@ -1,6 +1,5 @@
 package jpabook.jpashop.service;
 
-import jpabook.jpashop.domain.item.Book;
 import jpabook.jpashop.domain.item.Item;
 import jpabook.jpashop.repository.ItemRepository;
 import lombok.RequiredArgsConstructor;
@@ -22,13 +21,16 @@ public class ItemService {
     }
 
     // 변경 감지 (병합보다는 변경감지를 사용해야한다. 병합은 모든것을 NULL 포함해서 갈아치운다.)
+    // 파라미터가 많은경우 파라미터 Dto 를 만드는게 좋다.
     @Transactional
-    public void updateItem(Long itemId, Book param) {
+    public Item updateItem(Long itemId, String name, int price, int stockQuantity) {
         Item findItem = itemRepository.findOne(itemId);
 
-        findItem.setPrice(param.getPrice());
-        findItem.setName(param.getName());
-        findItem.setStockQuantity(param.getStockQuantity());
+        findItem.setName(name);
+        findItem.setPrice(price);
+        findItem.setStockQuantity(stockQuantity);
+
+        return findItem;
     }
 
     public List<Item> findItems() {
