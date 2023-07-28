@@ -7,7 +7,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: none # app 실행 시점에 테이블 을 모두 지우고 다시 생성 (create, none...)
+      ddl-auto: create # app 실행 시점에 테이블 을 모두 지우고 다시 생성 (create, none...)
     properties:
       hibernate:
         # show_sql: true system out 을 통해 출력
@@ -17,3 +17,7 @@ logging:
   level:
     org.hibernate.SQL: debug # logger 을 통해 출력
     org.hibernate.type: trace # 쿼리파라미터 값 출력
+
+
+server:
+  port: 9999

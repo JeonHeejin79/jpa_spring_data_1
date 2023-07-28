@@ -96,4 +96,30 @@ public class OrderRepository {
         TypedQuery<Order> query = em.createQuery(cq).setMaxResults(1000); //최대 1000건
         return query.getResultList();
     }
+
+    // fetch join 패치조인 (적극적으로 홀요해야 한다.)
+    // 재사용성이 높다. -> 원하는 dto 에 transfer 해서 사용 가능하다.
+    public List<Order> findOrderByFetchJoin() {
+        // lazy 를 무시하고 객체에 다 값을 채워서 가져온다.
+        // select 절에서 모든것을 가져온다.
+        return em.createQuery("select o from Order o" +
+                " join fetch o.member m" +
+                " join fetch o.delivery d", Order.class).getResultList();
+    }
+
+    // jpa 에서 dto 로 바로조회
+    // 재사용이 안된다. dto 로 조회했기 떄문에 변경이 안된다.
+    // 성능 최적화면에서 조금 더 낳다.
+    // 코드상 조금 더 지저분하다.
+    public List<OrderSimpleQueryDto> findOrderDtos() {
+
+        // ENTITY 만 반환가능
+        // DTO 반환하려면 NEW 해줘야함
+        // select 절에서 원하는것만 가져올 수 있음
+        return em.createQuery(
+                "select new jpabook.jpashop.repository.OrderSimpleQueryDto(o.id, m.name, o.orderDate, o.status, d.address) " +
+                " from Order o" +
+                " join o.member m" +
+                " join o.delivery d", OrderSimpleQueryDto.class).getResultList();
+    }
 }

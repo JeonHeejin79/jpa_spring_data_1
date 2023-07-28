@@ -24,6 +24,7 @@ public class Order {
     @JoinColumn(name = "member_id") // 연관관계의 주인
     private Member member;
 
+    // 1 대 다는 기본이 fatch LAZY 로 되어 있다.
     // CascadeType.ALL -> order persist 시 orderItems 도 persist 한다.
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private List<OrderItem> orderItems = new ArrayList<>();

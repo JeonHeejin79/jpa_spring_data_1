@@ -24,6 +24,7 @@ public class Member {
     private Address address;
 
     // @JsonIgnore
+    @JsonIgnore
     @OneToMany(mappedBy = "member") // 연관관계의 주인이 아님을 선언
     private List<Order> orders = new ArrayList<>();
 
