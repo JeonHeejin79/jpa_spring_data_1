@@ -65,7 +65,7 @@ public class OrderApiController {
     }
 
     /**
-     * 방법 1 application.yml 에  default_batch_fetch_size: 100  추가 (in 절의 갯수)
+     * 방법 1 application.yml 에  default_batch_fetch_size: 100  추가 (in 절의 갯수 maximum 은 1000개 이다.)
      * 방법 2 Entity 객체에 @BatchSize(size = 1000) 추가
      *       ex) @BatchSize(size = 1000)
      *           private List<OrderItem> orderItems new ArrayList<>();
