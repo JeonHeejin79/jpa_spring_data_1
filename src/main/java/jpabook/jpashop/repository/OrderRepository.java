@@ -123,4 +123,23 @@ public class OrderRepository {
                 " join o.member m" +
                 " join o.delivery d", OrderSimpleQueryDto.class).getResultList();
     }
+
+    public List<Order> findAllByFetchJoin() {
+
+        // distinct 가 잇으면 order 가 같은 값이 있으면 중복을 제거해준다.
+        // 쿼리상으로는 안된다. 객체상으로만 중복제가가 된다.
+        // 단점 : 페이징쿼리가 안된다. (setFirstResult, setMaxResults) 이 적용 안된다.
+        // 1:N 조인데엇는 패치조인을 쓰면 안된다. ROW 수가 증가된 페이징 처리가 된다.
+        // 모든 데이터를 DB 에서 읽어오고 메모리에서 페이징 처리 해버린다.
+        // + 컬렉션 페치 조인은 1개만 사용할 수 있다. 둘 이상 페치 조인을 사용하면 안된다. 데이터가 부정합하게 조회될 수 있다.
+        return em.createQuery(
+            "select distinct o from Order o" +
+                " join fetch o.member m" +
+                " join fetch o.delivery d" +
+                " join fetch o.orderItems oi" +
+                " join fetch oi.item i", Order.class)
+            // .setFirstResult(1) // 첫번쨰부터 시작
+            // .setMaxResults(100) // 100 개까지 조회
+            .getResultList();
+    }
 }
