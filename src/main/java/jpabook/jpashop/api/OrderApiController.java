@@ -9,6 +9,7 @@ import jpabook.jpashop.repository.OrderSearch;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDateTime;
@@ -56,6 +57,36 @@ public class OrderApiController {
             System.out.println("order ref = " + order + " id=" + order.getId());
         }
         
+        List<OrderDto> collect = orders.stream()
+                .map(v -> new OrderDto(v))
+                .collect(Collectors.toList());
+
+        return collect;
+    }
+
+    /**
+     * 방법 1 application.yml 에  default_batch_fetch_size: 100  추가 (in 절의 갯수)
+     * 방법 2 Entity 객체에 @BatchSize(size = 1000) 추가
+     *       ex) @BatchSize(size = 1000)
+     *           private List<OrderItem> orderItems new ArrayList<>();
+     * -> in 절로 바뀜 (1->N->M) ----> (1->1->1) 로 개선
+     * -> 1. orders, member, delivery 은 join 쿼리
+     * -> 2. order_item 은 in 절 쿼리
+     * -> 3. items 은 in 절 쿼리
+     * -> 페이징도 되면서 성능최적화도 가능
+     * to One 관계는 join fetch 로 하고  on to many 관계는 default_batch_fetch_size 설정하여 in 절로 조회하게 한다.
+     *
+     * */
+    @GetMapping("/api/v3.1/orders")
+    public List<OrderDto> ordersV3_page(
+            @RequestParam(value="offset", defaultValue = "0") int offset,
+            @RequestParam(value="limit", defaultValue = "100") int limit) {
+        List<Order> orders = orderRepository.findOrderByFetchJoin(offset, limit);
+
+        for (Order order : orders) {
+            System.out.println("order ref = " + order + " id=" + order.getId());
+        }
+
         List<OrderDto> collect = orders.stream()
                 .map(v -> new OrderDto(v))
                 .collect(Collectors.toList());
