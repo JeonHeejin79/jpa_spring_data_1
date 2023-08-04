@@ -43,13 +43,13 @@ public class MemberService {
 
     // 회원 조회
     public Member findOne(Long memberId) {
-        return memberRepository.findOne(memberId);
+        return memberRepository.findById(memberId).get();
     }
 
     @Transactional
     public void update(Long id, String name) {
         // 커맨드와 쿼리를 분리한다.
-        Member member = memberRepository.findOne(id);
+        Member member = memberRepository.findById(id).get();
         member.setName(name);
     }
 }

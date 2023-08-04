@@ -35,7 +35,7 @@ class MemberServiceTest {
 
         // then
         em.flush(); // 영속성컨텍스트 안에 있는 쿼리를 날린다.
-        Assertions.assertEquals(member, memberRepository.findOne(savedId));
+        Assertions.assertEquals(member, memberRepository.findById(savedId));
     
     }
     
