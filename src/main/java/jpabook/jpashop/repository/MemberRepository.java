@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-
+// SPRING DATA JPA
 public interface MemberRepository extends JpaRepository<Member, Long> {
 
     // select m from member m where m.name = ?
